@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>E-Mail bestätigt – GET READY</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body><main>
+<nav><a href="./index.html">GET READY</a><a href="./support.html">Support</a><a href="./datenschutz.html">Datenschutz</a><a href="./impressum.html">Impressum</a></nav>
+<!--
+  Ziel des Bestätigungslinks aus der Registrierungs-E-Mail (seit 26.10.2026).
+  Supabase hat die Adresse schon bestätigt, bevor es hierher weiterleitet –
+  diese Seite sagt nur, wie es weitergeht. Der angehängte ?code=… wird nicht
+  gebraucht und nicht gelesen. Fehler (abgelaufen, schon benutzt) kommen als
+  #error=… im Fragment und werden unten angezeigt.
+-->
+<h1 id="titel">E-Mail bestätigt</h1>
+<p class="lead" id="lead">Dein Konto ist freigeschaltet.</p>
+
+<p id="weiter">Öffne GET READY auf deinem iPhone und melde dich mit deiner E-Mail-Adresse und deinem Passwort an.</p>
+<p><a href="getready://">GET READY öffnen</a></p>
+
+<h2 lang="en">Email confirmed</h2>
+<p lang="en" id="weiter-en">Your account is active. Open GET READY on your iPhone and sign in with your email address and password.</p>
+
+<footer>Fragen? <a href="mailto:support@getready-app.de">support@getready-app.de</a></footer>
+</main>
+<script>
+  // Supabase meldet Fehler im Fragment, z. B. #error=access_denied&error_code=otp_expired
+  var f = new URLSearchParams(location.hash.slice(1))
+  if (f.get("error") || f.get("error_code")) {
+    var abgelaufen = (f.get("error_code") || "").indexOf("expired") >= 0
+    document.getElementById("titel").textContent = "Link nicht mehr gültig"
+    document.getElementById("lead").textContent = abgelaufen
+      ? "Der Bestätigungslink ist abgelaufen oder wurde schon benutzt."
+      : "Der Bestätigungslink konnte nicht verwendet werden."
+    document.getElementById("weiter").textContent =
+      "Versuch dich in der App einfach anzumelden – ist die Adresse schon bestätigt, klappt es. Sonst lege das Konto noch einmal an, dann kommt eine neue E-Mail."
+    document.getElementById("weiter-en").textContent =
+      "This confirmation link is no longer valid. Try signing in in the app – if your address is already confirmed, it works. Otherwise create the account again to get a new email."
+  }
+</script>
+</body></html>
