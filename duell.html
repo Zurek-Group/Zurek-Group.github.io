@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Duell – GET READY</title>
+<link rel="stylesheet" href="./style.css">
+<style>
+  .kaestchen { font-size: 1.8rem; letter-spacing: .2em; margin: .4rem 0; }
+  .knopf { display: inline-block; padding: .8rem 1.2rem; background: #1f4b99; color: #fff; text-decoration: none; font-weight: 600; margin: .4rem 0; }
+</style>
+</head>
+<body><main>
+<nav><a href="./index.html">GET READY</a><a href="./support.html">Support</a><a href="./datenschutz.html">Datenschutz</a><a href="./impressum.html">Impressum</a></nav>
+<!--
+  Ziel der Duell-Links aus der App (seit 11.11.2026). Die Seite liest nur,
+  was im Link steht – Code der Aufgaben, Ergebnis als 0/1-Folge, Sekunden –,
+  und reicht es an die App weiter (getready://duell?…). Nichts wird
+  gespeichert oder an einen Server geschickt.
+-->
+<h1 id="titel">Du wurdest herausgefordert</h1>
+<p class="lead" id="lead">Fünf Aufgaben, für beide dieselben. Wer schafft mehr – und schneller?</p>
+<p class="kaestchen" id="kaestchen" hidden></p>
+<p id="ergebnis" hidden></p>
+
+<p><a class="knopf" id="annehmen" href="getready://duell">In GET READY annehmen</a></p>
+<p>Noch keine App? Such im App Store nach <strong>GET READY</strong> und öffne diesen Link danach noch einmal.</p>
+
+<h2 lang="en">You've been challenged</h2>
+<p lang="en">Five tasks, the same for both of you. Open the link in GET READY to accept – or search the App Store for <strong>GET READY</strong> and open this link again afterwards.</p>
+
+<footer>Fragen? <a href="mailto:support@getready-app.de">support@getready-app.de</a></footer>
+</main>
+<script>
+  var p = new URLSearchParams(location.search)
+  var code = p.get("c") || ""
+  if (/^[a-z0-9]{6}$/.test(code)) {
+    var teile = ["c=" + code]
+    var r = p.get("r") || "", s = Number(p.get("s"))
+    if (/^[01]{5}$/.test(r) && Number.isInteger(s) && s >= 0 && s <= 3600) {
+      teile.push("r=" + r, "s=" + s)
+      var k = document.getElementById("kaestchen")
+      k.textContent = r.split("").map(function (z) { return z === "1" ? "🟧" : "⬛" }).join("")
+      k.hidden = false
+      var e = document.getElementById("ergebnis")
+      var richtig = r.split("").filter(function (z) { return z === "1" }).length
+      e.textContent = "Vorgelegt: " + richtig + " von 5 in " + Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0") + "."
+      e.hidden = false
+    }
+    document.getElementById("annehmen").href = "getready://duell?" + teile.join("&")
+  } else {
+    document.getElementById("titel").textContent = "Dieser Link ist unvollständig"
+    document.getElementById("lead").textContent = "Lass dir den Duell-Link noch einmal schicken."
+    document.getElementById("annehmen").hidden = true
+  }
+</script>
+</body></html>
